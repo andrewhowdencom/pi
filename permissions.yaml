@@ -14,6 +14,11 @@ rules:
     condition: 'tool == read && path.startsWith("~/.agents")'
     action: allow
 
+  # Allow reads of pi libraries (@mariozechner packages in node_modules).
+  - name: "Allow reads of pi libraries"
+    condition: 'tool == read && path.contains("@mariozechner")'
+    action: allow
+
   # General allow for file-based tools within the project directory.
   - name: "Allow within project"
     condition: 'path.startsWith(cwd)'
