@@ -1,0 +1,38 @@
+version: 1
+# Default sandbox: allow all tools within the current working directory,
+# block them outside of it, and require confirmation for shell commands.
+
+rules:
+  - name: "Allow within project"
+    condition: 'path.startsWith(cwd)'
+    action: allow
+
+  - name: "Block outside project"
+    condition: 'true'
+    action: confirm
+    message: "Operations outside the project directory are blocked"
+
+  - name: "Allow harmless task management"
+    condition: 'tool.startsWith("Task")'
+    action: allow
+
+  - name: "Allow reads of the Agent dir"
+    condition: 'tool == read && path.startsWith("~/.agents")'
+    action: allow
+
+  - name: "Bash"
+    condition: 'tool == "bash"'
+    rules:
+      - name: "Allow safe commands"
+        condition: 'command.matches("^(ls|find|grep|git\\s+status)\\b")'
+        action: allow
+
+      - name: "Block destructive commands"
+        condition: 'command.contains("sudo")'
+        action: block
+        message: "In general, you should not need root or to switch users to achieve tasks"
+
+      - name: "Confirm other bash"
+        condition: 'true'
+        action: confirm
+        message: "Shell commands require manual approval"
