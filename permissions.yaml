@@ -1,28 +1,33 @@
 version: 1
-# Default sandbox: allow all tools within the current working directory,
-# block them outside of it, and require confirmation for shell commands.
+# Rules are evaluated top-to-bottom; the first matching rule wins.
+# The catch-all "Block outside project" MUST be the last rule, otherwise
+# any rule placed after it will be dead code (never reached).
 
 rules:
-  - name: "Allow within project"
-    condition: 'path.startsWith(cwd)'
-    action: allow
-
-  - name: "Block outside project"
-    condition: 'true'
-    action: confirm
-    message: "Operations outside the project directory are blocked"
-
+  # Broad harmless allows first — these tools have no path and are safe.
   - name: "Allow harmless task management"
     condition: 'tool.startsWith("Task")'
     action: allow
 
+  # Specific allows outside the project directory.
   - name: "Allow reads of the Agent dir"
     condition: 'tool == read && path.startsWith("~/.agents")'
     action: allow
 
+  # General allow for file-based tools within the project directory.
+  - name: "Allow within project"
+    condition: 'path.startsWith(cwd)'
+    action: allow
+
+  # Bash-specific rules. Nested rules are checked in order when tool == "bash".
   - name: "Bash"
     condition: 'tool == "bash"'
     rules:
+      - name: "Block command chaining"
+        condition: 'command.matches(".*((&&)|(\\|)).*")'
+        action: block
+        message: "Command chaining with &&, ||, or | is not allowed. Use separate commands instead."
+
       - name: "Allow safe commands"
         condition: 'command.matches("^(ls|find|grep|git\\s+status)\\b")'
         action: allow
@@ -36,3 +41,10 @@ rules:
         condition: 'true'
         action: confirm
         message: "Shell commands require manual approval"
+
+  # Catch-all: anything that hasn't matched an allow rule above gets confirmed.
+  # This must remain the LAST rule.
+  - name: "Block outside project"
+    condition: 'true'
+    action: confirm
+    message: "Operations outside the project directory are blocked"
