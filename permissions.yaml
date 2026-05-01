@@ -46,6 +46,10 @@ rules:
         condition: 'command.matches("^(ls|find|grep)\\b")'
         action: allow
 
+      - name: "Allow safe Bun and TypeScript commands"
+        condition: 'command.matches("^(bun\\s+(install|i|add|remove|rm|test|x|upgrade|pm\\s+ls|run\\s+(test|lint|typecheck|check|dev))\\b|bunx\\b|tsc\\s+--noEmit\\b)")'
+        action: allow
+
       - name: "Block destructive commands"
         condition: 'command.contains("sudo")'
         action: block
