@@ -1,4 +1,5 @@
 version: 1
+default_action: block
 # Rules are evaluated top-to-bottom; the first matching rule wins.
 # The catch-all "Block outside project" MUST be the last rule, otherwise
 # any rule placed after it will be dead code (never reached).
@@ -6,12 +7,12 @@ version: 1
 rules:
   # Broad harmless allows first — these tools have no path and are safe.
   - name: "Allow harmless task management"
-    condition: 'tool.startsWith("Task")'
+    condition: 'tool.startsWith("Task") && tool != "TaskExecute"'
     action: allow
 
   # Specific allows outside the project directory.
   - name: "Allow reads of the Agent dir"
-    condition: 'tool == read && path.startsWith("~/.agents")'
+    condition: 'tool == read && path.matches("^/home/[^/]+/\\.agents/.*")'
     action: allow
 
   # Allow reads of pi libraries (@mariozechner packages in node_modules).
@@ -60,9 +61,9 @@ rules:
         action: confirm
         message: "Shell commands require manual approval"
 
-  # Catch-all: anything that hasn't matched an allow rule above gets confirmed.
+  # Catch-all: anything that hasn't matched an allow rule above is blocked.
   # This must remain the LAST rule.
   - name: "Block outside project"
     condition: 'true'
-    action: confirm
+    action: block
     message: "Operations outside the project directory are blocked"
