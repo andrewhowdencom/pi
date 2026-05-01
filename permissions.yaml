@@ -28,8 +28,17 @@ rules:
         action: block
         message: "Command chaining with &&, ||, or | is not allowed. Use separate commands instead."
 
+      - name: "Confirm git force push"
+        condition: 'command.matches("^git\\s+push\\b") && (command.contains("--force") || command.contains("--force-with-lease") || command.matches(".*\\s-f(\\s|$).*"))'
+        action: confirm
+        message: "Force push can rewrite remote history. Confirm?"
+
+      - name: "Allow safe git"
+        condition: 'command.matches("^git\\s+(add|log|status|diff|commit|branch|show|stash|remote|tag|push|pull|fetch)\\b")'
+        action: allow
+
       - name: "Allow safe commands"
-        condition: 'command.matches("^(ls|find|grep|git\\s+status)\\b")'
+        condition: 'command.matches("^(ls|find|grep)\\b")'
         action: allow
 
       - name: "Block destructive commands"
