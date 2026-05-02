@@ -52,6 +52,11 @@ rules:
         action: confirm
         message: "Force push can rewrite remote history. Confirm?"
 
+      - name: "Block git -C"
+        condition: 'command.matches("^git\\s+-C")'
+        action: block
+        message: "git -C bypasses the project directory sandbox. Use cd and relative paths instead."
+
       - name: "Allow safe git"
         condition: 'command.matches("^git\\s+(add|log|status|diff|commit|branch|show|stash|remote|tag|push|pull|fetch)\\b")'
         action: allow

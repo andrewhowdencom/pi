@@ -40,3 +40,10 @@ Example:
 ```
 /create-prompt security-auditor "Review code for security vulnerabilities"
 ```
+
+## Path and Git Conventions
+
+The permission sandbox blocks operations that escape the project directory. Agents must use relative paths and `cd` to navigate.
+
+- **Never use `git -C <path>`**: This option is blocked because it allows operating on repositories outside the sandbox. Use `cd <relative-path>` and then run git commands normally.
+- **Navigate with `cd`**: Change into directories using relative paths before executing commands. This keeps all operations within the sandboxed working directory.
