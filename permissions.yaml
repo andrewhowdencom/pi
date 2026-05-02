@@ -60,6 +60,10 @@ rules:
         condition: 'command.matches("^(ls|find|grep|pwd|mkdir|wc|id|whoami|uname|env|echo|which)\\b")'
         action: allow
 
+      - name: "Allow task"
+        condition: 'command.matches("^task\\b")'
+        action: allow
+
       - name: "Allow safe Bun and TypeScript commands"
         condition: 'command.matches("^(bun\\s+(install|i|add|remove|rm|test|x|upgrade|pm\\s+ls|run\\s+(test|lint|typecheck|check|dev))\\b|bunx\\b|tsc\\s+--noEmit\\b)")'
         action: allow
