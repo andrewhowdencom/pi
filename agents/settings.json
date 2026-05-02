@@ -1,0 +1,12 @@
+{
+  "lastChangelogVersion": "0.72.1",
+  "defaultProvider": "fireworks",
+  "defaultModel": "accounts/fireworks/models/kimi-k2p6",
+  "defaultThinkingLevel": "medium",
+  "packages": [
+    "git:github.com/andrewhowdencom/pi.hitl.git",
+    "npm:@tintinweb/pi-tasks",
+    "git:github.com/andrewhowdencom/pi.agents.git"
+  ],
+  "theme": "midnight-ocean"
+}
