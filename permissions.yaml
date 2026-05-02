@@ -25,6 +25,14 @@ rules:
     condition: 'path.startsWith(cwd)'
     action: allow
 
+  - name: "Allow switching agents"
+    condition: 'tool == "switch_agent"'
+    action: allow 
+
+  - name: "Allow invokinbg sub-agents"
+    condition: 'tool.startsWith("invoke_")'
+    action: allow
+
   # Bash-specific rules. Nested rules are checked in order when tool == "bash".
   - name: "Bash"
     condition: 'tool == "bash"'
@@ -64,6 +72,24 @@ rules:
         condition: 'command.matches("^mcp-cli(\\s+(-d|--help|-c\\s+\\S+))*\\s+call\\b")'
         action: confirm
         message: "mcp-cli call executes tools on external MCP servers. Confirm?"
+
+      - name: "Allow safe gh commands"
+        condition: 'command.matches("^gh\\s+(status|repo\\s+view|pr\\s+(list|view|diff|checks)|issue\\s+(list|view)|run\\s+(list|view|watch)|workflow\\s+(list|view)|release\\s+(list|view)|search|gist\\s+(list|view)|auth\\s+status)\\b")'
+        action: allow
+
+      - name: "Allow safe gh create"
+        condition: 'command.matches("^gh\\s+(pr|issue|release|gist)\\s+create\\b")'
+        action: allow
+
+      - name: "Block destructive gh commands"
+        condition: 'command.matches("^gh\\s+(repo\\s+delete|release\\s+delete|gist\\s+delete|run\\s+cancel|auth\\s+(login|logout|refresh))\\b")'
+        action: block
+        message: "This gh command is destructive or changes auth state and is blocked"
+
+      - name: "Confirm other gh commands"
+        condition: 'command.matches("^gh\\b")'
+        action: confirm
+        message: "This GitHub CLI command may modify remote state. Confirm?"
 
       - name: "Block destructive commands"
         condition: 'command.matches(".*\\bsudo\\b.*")'
