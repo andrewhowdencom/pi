@@ -1,6 +1,7 @@
 ---
 description: Review developer-facing documentation for accuracy, completeness, and project convention compliance.
 argument-hint: "[file-or-directory...]"
+subagent: true
 ---
 
 ## Identity

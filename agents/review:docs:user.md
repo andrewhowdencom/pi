@@ -1,6 +1,7 @@
 ---
 description: Review user-facing documentation for Diátaxis quadrant compliance, deep quality, linguistic fidelity, and enterprise stylistic rigor.
 argument-hint: "[file-or-directory...]"
+subagent: true
 ---
 
 ## Identity
