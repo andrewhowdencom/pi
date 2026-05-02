@@ -34,6 +34,11 @@ rules:
         action: block
         message: "Command chaining with &&, ||, or | is not allowed. Use separate commands instead."
 
+      - name: "Block cat"
+        condition: 'command.matches("^cat\\b")'
+        action: block
+        message: "please use read tool"
+
       - name: "Confirm git force push"
         condition: 'command.matches("^git\\s+push\\b") && (command.matches(".*--force.*") || command.matches(".*--force-with-lease.*") || command.matches(".*\\s-f(\\s|$).*"))'
         action: confirm
@@ -44,7 +49,7 @@ rules:
         action: allow
 
       - name: "Allow safe commands"
-        condition: 'command.matches("^(ls|find|grep)\\b")'
+        condition: 'command.matches("^(ls|find|grep|pwd|mkdir|wc|id|whoami|uname|env|echo|which)\\b")'
         action: allow
 
       - name: "Allow safe Bun and TypeScript commands"
@@ -69,6 +74,12 @@ rules:
         condition: 'true'
         action: confirm
         message: "Shell commands require manual approval"
+
+  # Confirm reads outside the project that aren't already explicitly allowed above.
+  - name: "Confirm reads outside project"
+    condition: 'tool == "read" && !path.startsWith(cwd)'
+    action: confirm
+    message: "This file is outside the project directory. Confirm?"
 
   # Catch-all: anything that hasn't matched an allow rule above is blocked.
   # This must remain the LAST rule.
