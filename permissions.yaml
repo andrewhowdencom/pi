@@ -40,7 +40,7 @@ rules:
       - name: "Block && and ||"
         condition: 'command.matches(".*((&&)|(\\|\\|)).*")'
         action: block
-        message: "Command chaining with && or || is not allowed."
+        message: "Command chaining with && or || is not allowed. The current working directory is already correct."
 
       - name: "Confirm pipes"
         condition: 'command.matches(".*\\|.*")'
@@ -60,7 +60,7 @@ rules:
       - name: "Block git -C"
         condition: 'command.matches("^git\\s+-C")'
         action: block
-        message: "git -C bypasses the project directory sandbox. Use cd and relative paths instead."
+        message: "git -C bypasses the project directory sandbox. The current working directory is already correct."
 
       - name: "Allow safe git"
         condition: 'command.matches("^git\\s+(add|log|status|diff|commit|branch|show|stash|remote|tag|push|pull|fetch)\\b")'
