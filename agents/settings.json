@@ -6,7 +6,12 @@
   "packages": [
     "git:github.com/andrewhowdencom/pi.hitl.git",
     "npm:@tintinweb/pi-tasks",
-    "git:github.com/andrewhowdencom/pi.agents.git"
+    {
+      "source": "git:github.com/andrewhowdencom/pi.agents.git",
+      "extensions": [
+        "+src/index.ts"
+      ]
+    }
   ],
   "theme": "midnight-ocean"
 }
