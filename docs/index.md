@@ -26,6 +26,14 @@ Pi is a terminal-based coding agent harness that integrates LLM reasoning with y
 
     [:octicons-arrow-right-24: Go to HITL docs](hitl/index.md)
 
+-   :material-web:{ .lg .middle } **Web**
+
+    ---
+
+    A web-based user interface for the pi coding agent. Provides a browser-based chat interface with real-time streaming, tool call visualization, and session management via WebSocket bridge.
+
+    [:octicons-arrow-right-24: Go to Web docs](web/index.md)
+
 </div>
 
 ---

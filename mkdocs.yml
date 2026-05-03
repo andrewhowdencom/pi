@@ -31,6 +31,7 @@ nav:
   - Home: index.md
   - Agents: '!import https://github.com/andrewhowdencom/pi.agents?branch=main'
   - HITL: '!import https://github.com/andrewhowdencom/pi.hitl?branch=main'
+  - Web: '!import https://github.com/andrewhowdencom/pi.web?branch=main'
 
 plugins:
   - search
