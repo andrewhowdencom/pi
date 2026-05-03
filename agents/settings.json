@@ -11,7 +11,8 @@
       "extensions": [
         "+src/index.ts"
       ]
-    }
+    },
+    "git:github.com/andrewhowdencom/pi.meta.git"
   ],
   "theme": "midnight-ocean"
 }

@@ -1,0 +1,14 @@
+---
+name: wrk
+description: "Plan the architecture, then implement it"
+
+steps:
+  - id: plan
+    agent: plan
+    type: linear
+    prompt: "Design a REST API for a todo list. Output the plan."
+
+  - id: build
+    agent: build
+    type: linear
+    prompt: "Implement the todo list API described in the previous step."
