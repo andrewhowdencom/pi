@@ -17,7 +17,7 @@ pi.prompts/
 
 ## Prompt Template Conventions
 
-- **Filename becomes the command**: `create-prompt.md` is invoked as `/create-prompt`.
+- **Filename becomes the command**: `create-new-prompt.md` is invoked as `/create-new-prompt`.
 - **Frontmatter**: Each template uses YAML frontmatter with:
   - `description` (required): One-line summary shown in autocomplete.
   - `argument-hint` (optional): Expected arguments using `<required>` and `[optional]` notation.
@@ -34,11 +34,11 @@ pi.prompts/
 
 ## Creating New Prompts
 
-Use the `/create-prompt` template to generate new prompt templates following the rigorous 8-step methodology.
+Use the `/create-new-prompt` template to generate new prompt templates following the rigorous 8-step methodology.
 
 Example:
 ```
-/create-prompt security-auditor "Review code for security vulnerabilities"
+/create-new-prompt security-auditor "Review code for security vulnerabilities"
 ```
 
 ## Path and Git Conventions
