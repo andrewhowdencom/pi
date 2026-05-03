@@ -1,0 +1,37 @@
+---
+name: wrk
+description: "Plan the architecture, then implement it"
+
+steps:
+  - id: "plan"
+    agent: "plan"
+    type: linear
+    prompt: |
+      Consider the oldest _open_ GitHub issue within this repository. Review that issue, and determine if:
+
+        1. It has already been implemented
+        2. It requires implementation
+
+      If it has already been implemented, please close it immediately with a note that describes how you determined it was implemented, complete with links and references.
+
+      If it has not already been implemented, create a plan on how this GitHub issue could be addressed.
+
+  - id: "plan:review"
+    type: pause
+    prompt: "The workflow is paused. Provide your direction to continue."
+
+  - id: build
+    agent: build
+    type: linear
+    prompt: |
+      Implement the plan as created in the previous step.
+
+      After implementation is complete, invoke the following subagents in order to verify quality:
+      1. `invoke_testing` — analyze testability and coverage gaps
+      2. `invoke_review:docs:user` — review user-facing documentation for Diátaxis compliance and quality
+      3. `invoke_review:docs:dev` — review developer-facing documentation for accuracy and completeness
+    subagents:
+      - testing
+      - review:docs:user
+      - review:docs:dev
+    
