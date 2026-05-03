@@ -37,10 +37,15 @@ rules:
   - name: "Bash"
     condition: 'tool == "bash"'
     rules:
-      - name: "Block command chaining"
-        condition: 'command.matches(".*((&&)|(\\|)).*")'
+      - name: "Block && and ||"
+        condition: 'command.matches(".*((&&)|(\\|\\|)).*")'
         action: block
-        message: "Command chaining with &&, ||, or | is not allowed. Use separate commands instead."
+        message: "Command chaining with && or || is not allowed."
+
+      - name: "Confirm pipes"
+        condition: 'command.matches(".*\\|.*")'
+        action: confirm
+        message: "Piped commands require manual approval."
 
       - name: "Block cat"
         condition: 'command.matches("^cat\\b")'
