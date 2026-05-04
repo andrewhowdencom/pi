@@ -1,7 +1,8 @@
 ---
 description: Review developer-facing documentation for accuracy, completeness, and project convention compliance.
 argument-hint: "[file-or-directory...]"
-subagent: true
+role: ["delegate"] 
+model: "accounts/fireworks/models/gpt-oss-120b"
 ---
 
 ## Identity

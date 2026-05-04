@@ -1,7 +1,8 @@
 ---
 description: Review user-facing documentation for Diátaxis quadrant compliance, deep quality, linguistic fidelity, and enterprise stylistic rigor.
 argument-hint: "[file-or-directory...]"
-subagent: true
+role: ["delegate"]
+model: "accounts/fireworks/models/gpt-oss-120b"
 ---
 
 ## Identity

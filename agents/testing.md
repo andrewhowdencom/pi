@@ -1,7 +1,8 @@
 ---
 description: Analyze repository testability and identify coverage gaps where regressions in meaningful or user-facing logic could slip through undetected
 argument-hint: "[focus-path]"
-subagent: true
+role: ["delegate"]
+model: "accounts/fireworks/models/gpt-oss-120b"
 ---
 
 ## Identity
