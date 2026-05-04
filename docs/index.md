@@ -34,6 +34,22 @@ Pi is a terminal-based coding agent harness that integrates LLM reasoning with y
 
     [:octicons-arrow-right-24: Go to Web docs](web/index.md)
 
+-   :material-server-network:{ .lg .middle } **LiteLLM**
+
+    ---
+
+    Pi extension that adds LiteLLM as a first-class provider with automatic model discovery. Point it at your LiteLLM proxy and all configured models appear in Pi's `/model` selector.
+
+    [:octicons-arrow-right-24: Go to LiteLLM docs](litellm.md)
+
+-   :material-tune:{ .lg .middle } **OpenAI**
+
+    ---
+
+    Pi extension for OpenAI-compatible endpoints with provider-specific sampling parameters — `repetition_penalty`, `top_k`, `mirostat`, and more. Defaults to Fireworks AI, supports any OpenAI-compatible API.
+
+    [:octicons-arrow-right-24: Go to OpenAI docs](openai.md)
+
 </div>
 
 ---
