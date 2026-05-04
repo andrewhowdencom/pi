@@ -20,16 +20,16 @@ steps:
     type: pause
     prompt: "The workflow is paused. Provide your direction to continue."
 
-  - id: build
-    agent: build
+  - id: execution
+    agent: execution
     type: linear
     prompt: |
-      Implement the plan as created in the previous step.
-
-      After implementation is complete, invoke the following subagents in order to verify quality:
-      1. `invoke_testing` — analyze testability and coverage gaps
-      2. `invoke_review:docs:user` — review user-facing documentation for Diátaxis compliance and quality
-      3. `invoke_review:docs:dev` — review developer-facing documentation for accuracy and completeness
+      Execute the development plan end-to-end:
+      1. Create a feature branch from main (see git skill for naming conventions)
+      2. Implement the plan
+      3. Invoke quality subagents for verification
+      4. Commit with a proper message
+      5. Push and clean up
     subagents:
       - testing
       - review:docs:user
