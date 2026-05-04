@@ -26,11 +26,11 @@ rules:
     action: allow
 
   - name: "Allow switching agents"
-    condition: 'tool == "switch_agent"'
+    condition: 'tool == "list_agents" || tool == "switch_agent"'
     action: allow 
 
   - name: "Allow invokinbg sub-agents"
-    condition: 'tool.startsWith("invoke_")'
+    condition: 'tool == "list_delegates" || tool == "delegate_agent"'
     action: allow
 
   # Bash-specific rules. Nested rules are checked in order when tool == "bash".
