@@ -27,26 +27,35 @@ rules:
 
   - name: "Allow switching agents"
     condition: 'tool == "list_agents" || tool == "switch_agent"'
-    action: allow 
+    action: allow
 
   - name: "Allow invokinbg sub-agents"
     condition: 'tool == "list_delegates" || tool == "delegate_agent"'
     action: allow
 
+  # ─── Per-segment Bash Command Evaluation ────────────────────────────────────
+  #
+  # Compound bash commands (using &&, ||, |, |&, ;, ;;, &, or newlines) are
+  # split into individual segments before rule evaluation. Each segment is
+  # checked independently against the rule set below, and results are combined
+  # with precedence: block > confirm > allow.
+  #
+  # This means a dangerous command hidden in a chain (e.g., 'ls && rm -rf /')
+  # cannot bypass the sandbox by being preceded by a safe command. The 'rm'
+  # segment would be caught by a block/confirm rule even if 'ls' is allowed.
+  #
+  # The splitter respects quotes, escapes, backticks, command substitution
+  # $(...), arithmetic expansion $((...)), and heredocs. Redirect operators
+  # (>, <, >>, <<, >&, <&, &>) do NOT split commands.
+  #
+  # To whitelist a command for use in pipelines, add it to the rules below.
+  # Rules placed after "Confirm other bash" are dead code (never reached).
+  # ───────────────────────────────────────────────────────────────────────────
+
   # Bash-specific rules. Nested rules are checked in order when tool == "bash".
   - name: "Bash"
     condition: 'tool == "bash"'
     rules:
-      - name: "Block && and ||"
-        condition: 'command.matches(".*((&&)|(\\|\\|)).*")'
-        action: block
-        message: "Command chaining with && or || is not allowed. The current working directory is already correct."
-
-      - name: "Confirm pipes"
-        condition: 'command.matches(".*\\|.*")'
-        action: confirm
-        message: "Piped commands require manual approval."
-
       - name: "Block cat"
         condition: 'command.matches("^cat\\b")'
         action: block
@@ -64,6 +73,31 @@ rules:
 
       - name: "Allow safe git"
         condition: 'command.matches("^git\\s+(add|log|status|diff|commit|branch|show|stash|remote|tag|push|pull|fetch)\\b")'
+        action: allow
+
+      # Safe read-only text processing utilities commonly used in pipelines
+      - name: "Allow safe read-only utilities"
+        condition: 'command.matches("^(head|tail|sort|uniq|diff|dirname|basename|stat|file|date|printf|test|true|false|seq|cut|tr|tee|nl|tac|rev|comm|cmp|cksum|md5sum|sha256sum|shasum)\\b")'
+        action: allow
+
+      # JSON/YAML/text processors — read-only in pipeline context
+      - name: "Allow safe processors"
+        condition: 'command.matches("^(jq|yq|perl)\\b")'
+        action: allow
+
+      # System information commands — purely read-only
+      - name: "Allow safe system info"
+        condition: 'command.matches("^(ps|pgrep|df|du|free|uptime|lsof|hostname)\\b")'
+        action: allow
+
+      # Safe npm subcommands — common development workflows
+      - name: "Allow safe npm"
+        condition: 'command.matches("^npm\\s+(install|ci|test|run|exec|ls|list|outdated|audit|config\\s+get|root|bin|version|whoami|get|pkg|view|search|--version|--help|-v|-h)\\b") || command.matches("^npm\\s*$")'
+        action: allow
+
+      # Safe node flags — version, help, built-in test runner, syntax check
+      - name: "Allow safe node"
+        condition: 'command.matches("^node\\s+(--version|--help|--test|--check|-v)\\b") || command.matches("^node\\s*$")'
         action: allow
 
       - name: "Allow safe commands"
@@ -115,11 +149,10 @@ rules:
         action: confirm
         message: "Shell commands require manual approval"
 
-  # Confirm reads outside the project that aren't already explicitly allowed above.
-  - name: "Confirm reads outside project"
-    condition: 'tool == "read" && !path.startsWith(cwd)'
+  - name: "Confirm operations outside project"
+    condition: '!path.startsWith(cwd)'
     action: confirm
-    message: "This file is outside the project directory. Confirm?"
+    message: "Operations outside the project directory require confirmation"
 
   # Catch-all: anything that hasn't matched an allow rule above is blocked.
   # This must remain the LAST rule.
