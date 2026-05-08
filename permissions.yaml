@@ -112,6 +112,15 @@ rules:
         condition: 'command.matches("^(bun\\s+(install|i|add|remove|rm|test|x|upgrade|pm\\s+ls|run\\s+(test|lint|typecheck|check|dev))\\b|bunx\\b|tsc\\s+--noEmit\\b)")'
         action: allow
 
+      # Safe Go subcommands — common development workflows
+      - name: "Allow safe go"
+        condition: 'command.matches("^go\\s+(version|env|build|run|test|fmt|vet|doc|generate|list|clean|get|install|mod\\s+(tidy|download|verify|graph|why|init|edit|fmt|vendor)|work\\s+(init|use|edit|sync|vendor))\\b") || command.matches("^go\\s*$")'
+        action: allow
+
+      - name: "Allow safe golangci-lint"
+        condition: 'command.matches("^golangci-lint\\s+(run|version|linters|config|help)\\b") || command.matches("^golangci-lint\\s*$")'
+        action: allow
+
       - name: "Allow safe mcp-cli discovery"
         condition: 'command.matches("^mcp-cli(\\s+(-d|--help|-c\\s+\\S+))*\\s*$") || command.matches("^mcp-cli(\\s+(-d|--help|-c\\s+\\S+))*\\s+(info|grep)\\b")'
         action: allow
