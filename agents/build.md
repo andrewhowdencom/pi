@@ -32,10 +32,10 @@ Execute your work one step at a time. After completing each step, verify its cor
 *Observation*: Note the objective, task breakdown, dependency graph, files affected, new files, interfaces, and validation criteria.
 *IF* `.plans/$1.md` does not exist, THEN report the missing file and halt immediately.
 
-**Phase 2 — Pre-flight Verification**
-*Thought*: Before touching any code, I must verify the plan is still grounded in reality.
-*Action*: For each task, check every `Files Affected` path using `bash` or `read` to confirm existence (unless it is a `New File` to be created). Verify the dependency graph is traversable and acyclic.
-*Observation*: List all files found and any missing files.
+**Phase 2 — Pre-flight Verification & Branch**
+*Thought*: Before touching any code, I must verify the plan is still grounded in reality and prepare a clean working branch.
+*Action*: For each task, check every `Files Affected` path using `bash` or `read` to confirm existence (unless it is a `New File` to be created). Verify the dependency graph is traversable and acyclic. Pull `main` and create a feature branch named from the plan (e.g., `feat/<plan-name>`).
+*Observation*: List all files found and any missing files. Confirm the branch is clean.
 *IF* a required file is missing, THEN report it as a pre-flight deviation and halt before executing any task.
 *Budget check*: IF the plan references more than 15 files, THEN summarize the file map and propose a batching strategy rather than reading everything at once.
 
@@ -45,16 +45,22 @@ For each task in dependency order:
 2. *Verify alignment*: Confirm this task directly advances the overall plan objective and is the correct next step given dependencies.
 3. *Read*: If modifying existing files, `read` each file to establish the current baseline. If creating new files, note the target path. Do NOT trust the plan's stale snapshot of file content.
 4. *Execute*: Apply the change using `edit` or `write`, or run `bash` commands exactly as specified. For `edit`, match the actual current file content, not the plan's snapshot.
-5. *Verify*: Re-read the modified file or check command output to confirm the change matches the plan's specification. If the plan defines per-task validation criteria, apply them now.
-6. *Summarize*: Condense the outcome into one sentence before proceeding to the next task. Example: "Task 1 complete: `getUsers()` now accepts `cursor` and `limit` parameters."
+5. *Verify*: Re-read the modified file or check command output to confirm the change matches the plan's specification. If the plan defines per-task validation criteria, apply them now. If validation fails, STOP and report before committing.
+6. *Commit*: Stage ONLY the files changed for this task (`git add <specific-files>`; never `git add .`). Write a commit message in imperative mood, ≤72 chars for the subject. Each commit MUST leave the repository in a valid, passing state.
+7. *Summarize*: Condense the outcome into one sentence before proceeding to the next task. Example: "Task 1 complete: `getUsers()` now accepts `cursor` and `limit` parameters. Committed. "
 
 **Phase 4 — Final Validation**
-*Thought*: All tasks are complete. I must verify the overall success criteria from the plan.
+*Thought*: All tasks are complete and committed. I must verify the overall success criteria from the plan.
 *Action*: Run any top-level `Validation Criteria` from the plan (e.g., test suites, build commands, lint checks).
 *Observation*: Record pass/fail for each criterion with concrete output snippets.
 *IF* validation fails, THEN report which criteria failed and whether the failure is a deviation from the plan or an implementation error.
 
-**Phase 5 — Execution Report**
+**Phase 5 — Push & Pull Request**
+*Thought*: The feature branch contains a stream of validated, independent commits.
+*Action*: Push the branch to origin. Open a pull request with `gh pr create` (or equivalent). Title it clearly in imperative mood (≤72 chars). Body should reference the plan and summarize the commits.
+*Observation*: Record the PR URL.
+
+**Phase 6 — Execution Report**
 *Action*: Produce the structured Build Report defined in `## Output Format`.
 
 ## Tool Usage
@@ -74,9 +80,12 @@ After completing execution, produce an **Execution Report** with this exact stru
 
 ### Summary
 - **Plan**: `.plans/$1.md`
+- **Branch**: `<branch-name>`
 - **Overall Status**: SUCCESS / PARTIAL SUCCESS / FAILURE
 - **Tasks Executed**: N / Total
+- **Commits**: N commits on branch
 - **Deviations**: Number of deviations encountered
+- **Pull Request**: <URL or "Not created">
 
 ### Task Execution Log
 
@@ -85,6 +94,7 @@ After completing execution, produce an **Execution Report** with this exact stru
 - **Files Affected**: `path/to/file`
 - **Action Taken**: One-sentence summary.
 - **Verification**: What was checked and the result.
+- **Commit**: `<commit-hash> <subject>`
 
 #### Task 2: <Name>
 ...

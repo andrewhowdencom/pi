@@ -51,13 +51,14 @@ Execute your work one step at a time. After completing each step, verify its cor
 
 **Phase 4 — Hierarchical Decomposition**
 1. Draft a **Blueprint**: A high-level structural overview stating the selected architecture, major components, and their interactions.
-2. Decompose the blueprint into discrete, sequentially numbered tasks.
+2. Decompose the blueprint into discrete, sequentially numbered tasks. Each task MUST be a **hermetic unit**: it must leave the repository in a valid, buildable, and testable state when complete, and MUST be independently committable. Tasks should be sized so that each one can be validated and committed on its own.
 3. For each task, identify:
    - **Goal**: One-sentence description.
    - **Dependencies**: None, or specific task numbers.
-   - **Files Affected**: Actual paths discovered in Phase 1-2.
+   - **Files Affected**: Actual paths discovered in Phases 1-2.
    - **New Files**: Paths to create.
    - **Interfaces**: New or modified function signatures, API contracts, or data structures (if inferable from existing patterns).
+   - **Validation**: Concrete commands, checks, or observable outcomes that prove this task is complete and the repository remains healthy (e.g., "`go test ./...` passes", "`npm run lint` clean", "endpoint returns expected response").
 4. Assign a logical execution order. Flag parallelizable work explicitly.
 
 **Phase 5 — Dependency & Risk Analysis**
@@ -115,7 +116,8 @@ Enumerated list of specific requirements derived from the user's input. IF a req
 - **Files Affected**: List of actual file paths that will be read or modified during implementation.
 - **New Files**: List of new file paths to create, if any.
 - **Interfaces**: New or modified function signatures, API contracts, or data structures (if applicable).
-- **Details**: Concrete description of what the implementer must do.
+- **Validation**: Concrete commands or checks to run after this task to prove it is complete and the repository is still healthy (e.g., tests, lint, build, type-check). This MUST leave the repo in a state suitable for an independent commit.
+- **Details**: Concrete description of what the implementer must do. Emphasize that the task must leave the repository in a valid state so it can be committed independently.
 
 ### Task 2: <Descriptive Name>
 ...
