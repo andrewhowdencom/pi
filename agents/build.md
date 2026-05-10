@@ -45,8 +45,13 @@ For each task in dependency order:
 2. *Verify alignment*: Confirm this task directly advances the overall plan objective and is the correct next step given dependencies.
 3. *Read*: If modifying existing files, `read` each file to establish the current baseline. If creating new files, note the target path. Do NOT trust the plan's stale snapshot of file content.
 4. *Execute*: Apply the change using `edit` or `write`, or run `bash` commands exactly as specified. For `edit`, match the actual current file content, not the plan's snapshot.
-5. *Verify*: Re-read the modified file or check command output to confirm the change matches the plan's specification. If the plan defines per-task validation criteria, apply them now. If validation fails, STOP and report before committing.
-6. *Commit*: Stage ONLY the files changed for this task (`git add <specific-files>`; never `git add .`). Write a commit message in imperative mood, ≤72 chars for the subject. Each commit MUST leave the repository in a valid, passing state.
+5. *Verify*: Re-read the modified file or check command output to confirm the change matches the plan's specification. If the plan defines per-task validation criteria, apply them now. Additionally, run `task validate` if a Taskfile is present in the repository, as a pre-commit sanity check. If validation fails, STOP and report before committing.
+6. *Commit*: Stage ONLY the files changed for this task (`git add <specific-files>`; never `git add .`). Write a commit message that fully adheres to the git skill:
+   - **Title**: ≤72 characters, imperative mood (e.g., "Add cursor-based pagination" not "Added pagination").
+   - **Body**: ≤72 characters per line. Explain **why** the change was made, not just **what** changed. Use structured headers (Design, Tradeoffs, Justification) if the change is non-trivial.
+   - **Co-author**: Coding agents are pair-programmers and MUST credit themselves with `Co-authored-by: ${MODEL} <${MODEL}@${HARNESS}.agent>` (e.g., `Co-authored-by: Claude <claude@pi.agent>`).
+   - **Issue references**: If the task relates to an existing issue, add `Rel:` or `Fixes:` trailers at the end of the body.
+   Each commit MUST leave the repository in a valid, passing state.
 7. *Summarize*: Condense the outcome into one sentence before proceeding to the next task. Example: "Task 1 complete: `getUsers()` now accepts `cursor` and `limit` parameters. Committed. "
 
 **Phase 4 — Final Validation**
@@ -62,6 +67,18 @@ For each task in dependency order:
 
 **Phase 6 — Execution Report**
 *Action*: Produce the structured Build Report defined in `## Output Format`.
+
+## Git Rules
+
+- Pull `main` before branching.
+- Before committing any task, run the per-task validation criteria from the plan. Additionally, run `task validate` if a Taskfile is present.
+- Stage only changed files for the current task. Never `git add .`.
+- Commit after every task. Each commit MUST leave the repository in a valid, passing state.
+- Commit messages MUST adhere to the full git skill format:
+  - **Title**: ≤72 characters, imperative mood.
+  - **Body**: ≤72 characters per line. Explain **why** the change was made, not just **what** changed. Use structured headers (Design, Tradeoffs, Justification) for non-trivial changes.
+  - **Co-author**: Coding agents MUST include `Co-authored-by: ${MODEL} <${MODEL}@${HARNESS}.agent>` (e.g., `Co-authored-by: Claude <claude@pi.agent>`).
+  - **Issue references**: Include `Rel:` or `Fixes:` trailers when the commit relates to a tracked issue.
 
 ## Tool Usage
 
