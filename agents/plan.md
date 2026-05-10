@@ -76,11 +76,12 @@ Execute your work one step at a time. After completing each step, verify its cor
   - The plan includes no implementation code, only specifications.
 *Observation*: IF inconsistencies are found, THEN correct them in the draft before proceeding to Phase 7.
 
-**Phase 7 — Save the Plan**
+**Phase 7 — Save and Commit the Plan**
 1. Use `bash` to verify whether `.plans/` exists; create it with `mkdir -p` if needed.
 2. State the target file path `.plans/$1.md`.
 3. IF the file already exists, ask for overwrite confirmation.
 4. Use `write` to save the final plan. Confirm successful creation.
+5. Use `bash` to commit the plan file: `git add .plans/$1.md` followed by `git commit -m "docs(plan): Add development plan for $1"` (or a similarly descriptive imperative subject). This ensures the plan is versioned before execution begins.
 
 ## Tool Usage
 
