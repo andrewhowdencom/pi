@@ -1,6 +1,6 @@
 ---
 name: wrk
-description: "Plan the architecture, then implement it"
+description: "Plan the architecture, then implement it as a stream of validated, independent commits ending in a pull request"
 
 steps:
   - id: "plan"
@@ -24,12 +24,22 @@ steps:
     agent: execution
     type: linear
     prompt: |
-      Execute the development plan end-to-end:
+      Execute the development plan end-to-end as a stream of hermetic, independently committable tasks:
+
       1. Create a feature branch from main (see git skill for naming conventions)
-      2. Implement the plan
-      3. Invoke quality subagents for verification
-      4. Commit with a proper message
-      5. Push and clean up
+      2. Execute each task from the plan in dependency order. For every task:
+         a. Implement the change precisely as specified
+         b. Validate the repository using the task's per-task validation criteria
+         c. Commit the change with a proper commit message
+      3. After all tasks are complete, run the plan's top-level validation criteria
+      4. Push the branch to origin
+      5. Open a pull request that describes the full stream of changes
+      6. Switch back to main and clean up
+
+      Each task MUST be a hermetic unit — it must leave the repository in a valid,
+      buildable, testable state and be independently committable. The resulting
+      branch will contain multiple commits, one per task, which together form a
+      cohesive pull request.
     subagents:
       - testing
       - review:docs:user
